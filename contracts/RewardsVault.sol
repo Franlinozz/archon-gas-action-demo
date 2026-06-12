@@ -53,4 +53,14 @@ contract RewardsVault {
         if (!ok) revert TransferFailed();
         emit Claimed(msg.sender, amount);
     }
+
+    /// @notice Claim rewards and send them to a recipient of the staker's choice.
+    function claimTo(address recipient) external {
+        uint256 amount = pendingRewards(msg.sender);
+        if (amount == 0) revert NothingToClaim();
+        (bool ok, ) = recipient.call{value: amount}("");
+        if (!ok) revert TransferFailed();
+        rewardDebt[msg.sender] = (staked[msg.sender] * accRewardPerShare) / 1e18;
+        emit Claimed(msg.sender, amount);
+    }
 }
