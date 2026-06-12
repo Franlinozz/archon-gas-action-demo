@@ -1,0 +1,31 @@
+name: Archon
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  gas-diff:
+    name: Mantle gas diff (Archon Action)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archon gas report + PR comment
+        uses: Franlinozz/Archon@main
+        with:
+          source-file: contracts/RewardsVault.sol
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          calls-per-year: "250000"
+
+  security-gate:
+    name: Security gate (archon-scan CLI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fail on high/critical findings
+        run: npx --yes github:Franlinozz/archon-cli scan contracts/RewardsVault.sol --fail-on high --label RewardsVaultDemo
