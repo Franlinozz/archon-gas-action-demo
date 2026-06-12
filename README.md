@@ -7,10 +7,10 @@ This repository demonstrates [Archon](https://archonaudit.xyz)'s CI surface on a
 
 ## See it live
 
-- ✅ **Green run + gas comment:** PR #1 — a safe gas optimization; the Action comments the L2/DA diff and the security gate passes.
-- ❌ **Red run on a regression:** PR #2 — introduces a reentrancy regression; the security gate exits `2` and the check goes red.
+- ✅ **Green run + gas comment:** [PR #1](https://github.com/Franlinozz/archon-gas-action-demo/pull/1) — a safe storage-caching optimization; the Action comments the L2/DA diff and the security gate passes.
+- ❌ **Red run on a regression:** [PR #2](https://github.com/Franlinozz/archon-gas-action-demo/pull/2) — introduces a reentrancy regression; the `archon-scan --fail-on high` gate exits `2` and the check goes red.
 
-(Links resolve in this repo's Pull requests tab — both PRs are kept open as living evidence.)
+Both PRs are kept open as living evidence.
 
 ## Use it in your repo
 
