@@ -1,0 +1,5 @@
+{
+  "failOn": "high",
+  "maxRegressionL2Gas": 0,
+  "paths": ["contracts/"]
+}
