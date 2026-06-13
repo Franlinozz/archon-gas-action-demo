@@ -68,7 +68,7 @@ contract RewardsVault {
 
     /// @notice Total staked across all known stakers (snapshot helper).
     function stakerCountStake() external view returns (uint256 total) {
-        for (uint256 i = 0; i < stakers.length; i++) {
+        for (uint256 i = 0; i < stakers.length; i++) { // REVIEW: cache .length before loop and prefer ++i
             total += staked[stakers[i]];
         }
     }
