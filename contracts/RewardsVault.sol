@@ -11,6 +11,7 @@ contract RewardsVault {
 
     mapping(address => uint256) public staked;
     mapping(address => uint256) public rewardDebt;
+    address[] public stakers;
 
     error NotOwner();
     error ZeroAmount();
@@ -27,6 +28,7 @@ contract RewardsVault {
 
     function stake() external payable {
         if (msg.value == 0) revert ZeroAmount();
+        if (staked[msg.sender] == 0) stakers.push(msg.sender);
         staked[msg.sender] += msg.value;
         totalStaked += msg.value;
         rewardDebt[msg.sender] = (staked[msg.sender] * accRewardPerShare) / 1e18;
@@ -52,5 +54,22 @@ contract RewardsVault {
         (bool ok, ) = msg.sender.call{value: amount}("");
         if (!ok) revert TransferFailed();
         emit Claimed(msg.sender, amount);
+    }
+
+    /// @notice Claim rewards to a chosen recipient.
+    function claimTo(address recipient) external {
+        uint256 amount = pendingRewards(msg.sender);
+        if (amount == 0) revert NothingToClaim();
+        (bool ok, ) = recipient.call{value: amount}("");
+        if (!ok) revert TransferFailed();
+        rewardDebt[msg.sender] = (staked[msg.sender] * accRewardPerShare) / 1e18;
+        emit Claimed(msg.sender, amount);
+    }
+
+    /// @notice Total staked across all known stakers (snapshot helper).
+    function stakerCountStake() external view returns (uint256 total) {
+        for (uint256 i = 0; i < stakers.length; i++) {
+            total += staked[stakers[i]];
+        }
     }
 }
