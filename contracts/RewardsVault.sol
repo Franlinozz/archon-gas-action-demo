@@ -27,9 +27,10 @@ contract RewardsVault {
 
     function stake() external payable {
         if (msg.value == 0) revert ZeroAmount();
-        staked[msg.sender] += msg.value;
+        uint256 userStaked = staked[msg.sender] + msg.value;
+        staked[msg.sender] = userStaked;
         totalStaked += msg.value;
-        rewardDebt[msg.sender] = (staked[msg.sender] * accRewardPerShare) / 1e18;
+        rewardDebt[msg.sender] = (userStaked * accRewardPerShare) / 1e18;
         emit Staked(msg.sender, msg.value);
     }
 
